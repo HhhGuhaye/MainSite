@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCore - Профессиональная Нейросеть</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <span class="logo-icon">🧠</span>
+                <span class="logo-text">NeuroCore</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#features">Возможности</a></li>
+                <li><a href="#demo">Демо</a></li>
+                <li><a href="#pricing">Тарифы</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+            <button class="btn-primary">Начать бесплатно</button>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section id="home" class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Профессиональная <span class="gradient-text">Нейросеть</span> для вашего бизнеса</h1>
+                <p>Автоматизируйте процессы, анализируйте данные и принимайте решения на основе ИИ нового поколения.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary btn-large">Попробовать демо</button>
+                    <button class="btn-secondary btn-large">Узнать больше</button>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Точность</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10ms</span>
+                        <span class="stat-label">Отклик</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Поддержка</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <canvas id="neural-canvas"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Возможности -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Возможности платформы</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Анализ данных</h3>
+                    <p>Глубокий анализ больших данных с выявлением скрытых закономерностей</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Автообучение</h3>
+                    <p>Непрерывное самообучение модели на новых данных без вмешательства человека</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Безопасность</h3>
+                    <p>Корпоративный уровень защиты данных и соответствие всем стандартам</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Высокая скорость</h3>
+                    <p>Оптимизированные алгоритмы для мгновенной обработки запросов</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Демо зона -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2 class="section-title">Интерактивное демо</h2>
+            <div class="demo-interface">
+                <div class="demo-controls">
+                    <h3>Параметры обучения</h3>
+                    <div class="control-group">
+                        <label>Скорость обучения</label>
+                        <input type="range" id="learning-rate" min="0.01" max="0.5" step="0.01" value="0.1">
+                        <span id="lr-value">0.1</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Количество эпох</label>
+                        <input type="number" id="epochs" min="10" max="1000" value="100">
+                    </div>
+                    <div class="button-group">
+                        <button id="start-btn" class="btn-primary">Запустить обучение</button>
+                        <button id="reset-btn" class="btn-secondary">Сбросить</button>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span>Точность:</span>
+                            <span id="accuracy">0%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Потери:</span>
+                            <span id="loss">0.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-visualization">
+                    <canvas id="demo-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Тарифы -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Тарифные планы</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Старт</h3>
+                    <div class="price">$0<span>/мес</span></div>
+                    <ul class="features-list">
+                        <li>✓ 1,000 запросов/день</li>
+                        <li>✓ Базовые модели</li>
+                        <li>✓ Email поддержка</li>
+                        <li>✗ API доступ</li>
+                    </ul>
+                    <button class="btn-outline">Выбрать</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Популярный</div>
+                    <h3>Профи</h3>
+                    <div class="price">$49<span>/мес</span></div>
+                    <ul class="features-list">
+                        <li>✓ 50,000 запросов/день</li>
+                        <li>✓ Продвинутые модели</li>
+                        <li>✓ Приоритетная поддержка</li>
+                        <li>✓ Полный API доступ</li>
+                    </ul>
+                    <button class="btn-primary">Выбрать</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Бизнес</h3>
+                    <div class="price">$199<span>/мес</span></div>
+                    <ul class="features-list">
+                        <li>✓ Безлимитные запросы</li>
+                        <li>✓ Кастомные модели</li>
+                        <li>✓ Персональный менеджер</li>
+                        <li>✓ SLA гарантия</li>
+                    </ul>
+                    <button class="btn-outline">Выбрать</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer id="contact" class="footer">
+        <div class="container footer-content">
+            <div class="footer-column">
+                <h4>NeuroCore</h4>
+                <p>Профессиональные решения на основе искусственного интеллекта для бизнеса любого масштаба.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Продукт</h4>
+                <ul>
+                    <li><a href="#">Возможности</a></li>
+                    <li><a href="#">Цены</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Документация</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Компания</h4>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Блог</a></li>
+                    <li><a href="#">Карьера</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Контакты</h4>
+                <p>support@neurocore.ai</p>
+                <p>+1 (555) 123-4567</p>
+                <div class="social-links">
+                    <a href="#">Twitter</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+        <div class="container copyright">
+            <p>&copy; 2024 NeuroCore. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
