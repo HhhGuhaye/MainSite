@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2e2e2e;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #ffcc00;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        .game {
+            border: 1px solid #fff;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background: #444;
+        }
+        button {
+            padding: 10px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #e6b800;
+        }
+    </style>
+    <script>
+        let userBalance = 1000;
+        
+        function updateBalanceDisplay() {
+            document.getElementById('balance').innerText = "Balance: $" + userBalance;
+        }
+
+        function bet(amount) {
+            if (amount > userBalance) {
+                alert("Insufficient balance!");
+                return;
+            }
+            userBalance -= amount;
+            updateBalanceDisplay();
+        }
+
+        function win(amount) {
+            userBalance += amount;
+            updateBalanceDisplay();
+        }
+    </script>
+</head>
+<body onload="updateBalanceDisplay()">
+    <header>
+        <h1>Welcome to My Casino</h1>
+    </header>
+    <div class="container">
+        <div class="game">
+            <h2>Slots</h2>
+            <button onclick="bet(10)">Bet $10</button>
+            <button onclick="win(30)">Win $30</button>
+        </div>
+        <div class="game">
+            <h2>Roulette</h2>
+            <button onclick="bet(20)">Bet $20</button>
+            <button onclick="win(50)">Win $50</button>
+        </div>
+        <div class="game">
+            <h2>Blackjack</h2>
+            <button onclick="bet(30)">Bet $30</button>
+            <button onclick="win(70)">Win $70</button>
+        </div>
+        <div id="balance"></div>
+    </div>
+</body>
+</html>
