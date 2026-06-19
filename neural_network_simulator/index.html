@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симулятор Нейросети</title>
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --panel-color: #16213e;
+            --accent-color: #0f3460;
+            --text-color: #e94560;
+            --white: #ffffff;
+            --success: #4cc9f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--white);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--panel-color);
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        h1 { margin: 0; color: var(--text-color); }
+        p { color: #aaa; margin-top: 5px; }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: var(--panel-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            background-color: #000;
+            border-radius: 5px;
+            border: 1px solid var(--accent-color);
+            cursor: crosshair;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--text-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.95); }
+        button.secondary { background-color: var(--accent-color); }
+
+        .stats {
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .stat-item {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .dot { width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Визуализатор Нейросети</h1>
+    <p>Классификация данных в реальном времени (Перцептрон с одним скрытым слоем)</p>
+</header>
+
+<div class="container">
+    <!-- Панель управления и статистики -->
+    <div class="card">
+        <h3>Панель управления</h3>
+        <div class="legend">
+            <span><span class="dot" style="background:#ff4d4d"></span>Класс 0</span>
+            <span><span class="dot" style="background:#4dff4d"></span>Класс 1</span>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item"><span>Эпоха:</span> <span id="epochDisplay">0</span></div>
+            <div class="stat-item"><span>Ошибка (Loss):</span> <span id="lossDisplay">0.0000</span></div>
+            <div class="stat-item"><span>Точность:</span> <span id="accDisplay">0%</span></div>
+        </div>
+
+        <div class="controls">
+            <button id="btnTrain">Старт / Пауза</button>
+            <button id="btnReset" class="secondary">Сброс весов</button>
+            <button id="btnClearData" class="secondary">Очистить данные</button>
+        </div>
+        <div class="controls">
+            <label style="display:flex; align-items:center; gap:5px; font-size:0.9em;">
+                Скорость: <input type="range" id="speedRange" min="1" max="50" value="10">
+            </label>
+        </div>
+        <p style="font-size: 0.8em; color: #888; margin-top: 15px; text-align: center;">
+            Кликните по черному полю справа, чтобы добавить точки данных.<br>
+            Левый клик - Класс 0 (Красный), Правый клик - Класс 1 (Зеленый).
+        </p>
+    </div>
+
+    <!-- Визуализация пространства решений -->
+    <div class="card">
+        <h3>Пространство решений</h3>
+        <canvas id="networkCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- График ошибки -->
+    <div class="card">
+        <h3>График обучения</h3>
+        <canvas id="lossCanvas" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<script>
+/**
+ * ПРОСТАЯ БИБЛИОТЕКА НЕЙРОСЕТИ
+ * Реализация с нуля для образовательных целей
+ */
+
+class NeuralNetwork {
+    constructor(inputNodes, hiddenNodes, outputNodes) {
+        this.inputNodes = inputNodes;
+        this.hiddenNodes = hiddenNodes;
+        this.outputNodes = outputNodes;
+        this.learningRate = 0.1;
+
+        // Инициализация весов случайными значениями от -1 до 1
+        this.weightsIH = new Float32Array(this.hiddenNodes * this.inputNodes).map(() => Math.random() * 2 - 1);
+        this.weightsHO = new Float32Array(this.outputNodes * this.hiddenNodes).map(() => Math.random() * 2 - 1);
+        
+        // Смещения (biases)
+        this.biasH = new Float32Array(this.hiddenNodes).map(() => Math.random() * 2 - 1);
+        this.biasO = new Float32Array(this.outputNodes).map(() => Math.random() * 2 - 1);
+    }
+
+    // Функция активации (Sigmoid)
+    sigmoid(x) {
+        return 1 / (1 + Math.exp(-x));
+    }
+
+    // Производная сигмоиды для обратного распространения
+    dsigmoid(y) {
+        return y * (1 - y);
+    }
+
+    predict(inputArray) {
+        // Прямое распространение (Forward Pass)
+        
+        // Скрытый слой
+        let hidden = new Float32Array(this.hiddenNodes);
+        for (let i = 0; i < this.hiddenNodes; i++) {
+            let sum = 0;
+            for (let j = 0; j < this.inputNodes; j++) {
+                sum += inputArray[j] * this.weightsIH[i * this.inputNodes + j];
+            }
+            sum += this.biasH[i];
+            hidden[i] = this.sigmoid(sum);
+        }
+
+        // Выходной слой
+        let output = new Float32Array(this.outputNodes);
+        for (let i = 0; i < this.outputNodes; i++) {
+            let sum = 0;
+            for (let j = 0; j < this.hiddenNodes; j++) {
+                sum += hidden[j] * this.weightsHO[i * this.hiddenNodes + j];
+            }
+            sum += this.biasO[i];
+            output[i] = this.sigmoid(sum);
+        }
+
+        return { output, hidden };
+    }
+
+    train(inputs, targets) {
+        const { output, hidden } = this.predict(inputs);
+
+        // Обратное распространение (Backpropagation)
+        
+        // 1. Ошибка выходного слоя: Target - Output
+        let outputErrors = new Float32Array(this.outputNodes);
+        for (let i = 0; i < this.outputNodes; i++) {
+            outputErrors[i] = targets[i] - output[i];
+        }
+
+        // 2. Градиенты выходного слоя
+        let gradientsO = new Float32Array(this.outputNodes);
+        for (let i = 0; i < this.outputNodes; i++) {
+            gradientsO[i] = outputErrors[i] * this.dsigmoid(output[i]);
+            gradientsO[i] *= this.learningRate;
+            
+            // Обновление весов HO и смещений O
+            this.biasO[i] += gradientsO[i];
+            for (let j = 0; j < this.hiddenNodes; j++) {
+                let delta = gradientsO[i] * hidden[j];
+                this.weightsHO[i * this.hiddenNodes + j] += delta;
+            }
+        }
+
+        // 3. Ошибка скрытого слоя
+        let hiddenErrors = new Float32Array(this.hiddenNodes);
+        for (let i = 0; i < this.hiddenNodes; i++) {
+            let sum = 0;
+            for (let j = 0; j < this.outputNodes; j++) {
+                sum += outputErrors[j] * this.weightsHO[j * this.hiddenNodes + i];
+            }
+            hiddenErrors[i] = sum;
+        }
+
+        // 4. Градиенты скрытого слоя
+        let gradientsH = new Float32Array(this.hiddenNodes);
+        for (let i = 0; i < this.hiddenNodes; i++) {
+            gradientsH[i] = hiddenErrors[i] * this.dsigmoid(hidden[i]);
+            gradientsH[i] *= this.learningRate;
+
+            // Обновление весов IH и смещений H
+            this.biasH[i] += gradientsH[i];
+            for (let j = 0; j < this.inputNodes; j++) {
+                let delta = gradientsH[i] * inputs[j];
+                this.weightsIH[i * this.inputNodes + j] += delta;
+            }
+        }
+
+        // Возвращаем среднюю квадратичную ошибку для графика
+        let mse = 0;
+        for(let i=0; i<outputErrors.length; i++) mse += outputErrors[i]**2;
+        return mse / outputErrors.length;
+    }
+
+    reset() {
+        this.weightsIH.fill(0).map(() => Math.random() * 2 - 1);
+        this.weightsHO.fill(0).map(() => Math.random() * 2 - 1);
+        this.biasH.fill(0).map(() => Math.random() * 2 - 1);
+        this.biasO.fill(0).map(() => Math.random() * 2 - 1);
+    }
+}
+
+/**
+ * ОСНОВНАЯ ЛОГИКА ПРИЛОЖЕНИЯ
+ */
+
+const nnCanvas = document.getElementById('networkCanvas');
+const nnCtx = nnCanvas.getContext('2d');
+const lossCanvas = document.getElementById('lossCanvas');
+const lossCtx = lossCanvas.getContext('2d');
+
+// Параметры сети: 2 входа (x, y), 4 нейрона в скрытом слое, 1 выход (класс)
+const brain = new NeuralNetwork(2, 6, 1);
+
+let trainingData = [];
+let isTraining = false;
+let epoch = 0;
+let totalLoss = 0;
+let lossHistory = [];
+let animationId;
+let speed = 10;
+
+// Отрисовка фона решения
+function drawDecisionBoundary() {
+    const resolution = 10; // Размер ячейки
+    const cols = Math.ceil(nnCanvas.width / resolution);
+    const rows = Math.ceil(nnCanvas.height / resolution);
+
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            // Нормализация координат к диапазону [0, 1]
+            const x = (i * resolution) / nnCanvas.width;
+            const y = (j * resolution) / nnCanvas.height;
+            
+            const result = brain.predict([x, y]);
+            const val = result.output[0];
+
+            // Цвет зависит от уверенности сети (0 - красный, 1 - зеленый)
+            const r = Math.floor((1 - val) * 255);
+            const g = Math.floor(val * 255);
+            nnCtx.fillStyle = `rgba(${r}, ${g}, 50, 0.3)`; // Полупрозрачный
+            nnCtx.fillRect(i * resolution, j * resolution, resolution, resolution);
+        }
+    }
+}
+
+// Отрисовка точек данных
+function drawDataPoints() {
+    trainingData.forEach(point => {
+        nnCtx.beginPath();
+        nnCtx.arc(point.x * nnCanvas.width, point.y * nnCanvas.height, 6, 0, Math.PI * 2);
+        nnCtx.fillStyle = point.label === 1 ? '#4dff4d' : '#ff4d4d';
+        nnCtx.strokeStyle = '#fff';
+        nnCtx.lineWidth = 2;
+        nnCtx.fill();
+        nnCtx.stroke();
+    });
+}
+
+// Отрисовка графика потерь
+function drawLossGraph() {
+    lossCtx.clearRect(0, 0, lossCanvas.width, lossCanvas.height);
+    
+    if (lossHistory.length < 2) return;
+
+    lossCtx.beginPath();
+    lossCtx.strokeStyle = '#0f3460';
+    lossCtx.lineWidth = 2;
+
+    const maxLoss = Math.max(...lossHistory, 0.5);
+    const stepX = lossCanvas.width / (lossHistory.length - 1);
+
+    for (let i = 0; i < lossHistory.length; i++) {
+        const x = i * stepX;
+        const y = lossCanvas.height - (lossHistory[i] / maxLoss) * (lossCanvas.height - 20) - 10;
+        if (i === 0) lossCtx.moveTo(x, y);
+        else lossCtx.lineTo(x, y);
+    }
+    lossCtx.stroke();
+
+    // Оси
+    lossCtx.strokeStyle = '#555';
+    lossCtx.lineWidth = 1;
+    lossCtx.beginPath();
+    lossCtx.moveTo(0, lossCanvas.height - 10);
+    lossCtx.lineTo(lossCanvas.width, lossCanvas.height - 10);
+    lossCtx.stroke();
+}
+
+function updateStats(loss) {
+    document.getElementById('epochDisplay').innerText = epoch;
+    document.getElementById('lossDisplay').innerText = loss.toFixed(5);
+    
+    // Расчет точности на текущих данных
+    let correct = 0;
+    trainingData.forEach(p => {
+        const res = brain.predict([p.x, p.y]);
+        const predictedClass = res.output[0] > 0.5 ? 1 : 0;
+        if (predictedClass === p.label) correct++;
+    });
+    const acc = trainingData.length > 0 ? Math.round((correct / trainingData.length) * 100) : 0;
+    document.getElementById('accDisplay').innerText = acc + '%';
+}
+
+function loop() {
+    if (!isTraining) return;
+
+    // Обучаем несколько итераций за кадр для скорости
+    let currentLoss = 0;
+    const iterations = speed * 5; 
+
+    for (let i = 0; i < iterations; i++) {
+        if (trainingData.length === 0) break;
+        
+        // Берем случайную точку (Стохастический градиентный спуск)
+        const randomIdx = Math.floor(Math.random() * trainingData.length);
+        const point = trainingData[randomIdx];
+        
+        const loss = brain.train([point.x, point.y], [point.label]);
+        currentLoss += loss;
+    }
+
+    if (trainingData.length > 0) {
+        currentLoss /= iterations;
+        epoch += iterations;
+        
+        // Обновляем историю графика реже, чтобы не забивать память
+        if (epoch % 50 === 0) {
+            lossHistory.push(currentLoss);
+            if (lossHistory.length > 200) lossHistory.shift();
+            drawLossGraph();
+        }
+        
+        drawDecisionBoundary();
+        drawDataPoints();
+        updateStats(currentLoss);
+    }
+
+    animationId = requestAnimationFrame(loop);
+}
+
+// Обработчики событий
+document.getElementById('btnTrain').addEventListener('click', () => {
+    isTraining = !isTraining;
+    if (isTraining) {
+        loop();
+        document.getElementById('btnTrain').innerText = "Пауза";
+        document.getElementById('btnTrain').style.backgroundColor = "#e94560";
+    } else {
+        cancelAnimationFrame(animationId);
+        document.getElementById('btnTrain').innerText = "Старт";
+        document.getElementById('btnTrain').style.backgroundColor = "#4cc9f0";
+    }
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+    brain.reset();
+    epoch = 0;
+    lossHistory = [];
+    totalLoss = 0;
+    drawLossGraph();
+    drawDecisionBoundary();
+    drawDataPoints();
+    updateStats(0);
+    if (!isTraining) {
+        // Если на паузе, просто перерисовать границу с новыми весами
+        drawDecisionBoundary();
+    }
+});
+
+document.getElementById('btnClearData').addEventListener('click', () => {
+    trainingData = [];
+    epoch = 0;
+    lossHistory = [];
+    drawDecisionBoundary();
+    drawDataPoints();
+    drawLossGraph();
+    updateStats(0);
+});
+
+document.getElementById('speedRange').addEventListener('input', (e) => {
+    speed = parseInt(e.target.value);
+});
+
+// Добавление данных кликом
+nnCanvas.addEventListener('mousedown', (e) => {
+    const rect = nnCanvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / nnCanvas.width;
+    const y = (e.clientY - rect.top) / nnCanvas.height;
+    
+    // Левый клик (0) - класс 0, Правый клик (2) - класс 1
+    const label = e.button === 2 ? 1 : 0;
+    
+    trainingData.push({ x, y, label });
+    
+    if (!isTraining) {
+        drawDecisionBoundary();
+        drawDataPoints();
+    }
+});
+
+// Блокировка контекстного меню для правого клика
+nnCanvas.addEventListener('contextmenu', event => event.preventDefault());
+
+// Начальная отрисовка
+drawDecisionBoundary();
+
+</script>
+
+</body>
+</html>

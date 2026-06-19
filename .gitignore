@@ -1,0 +1,448 @@
+```
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.ENV
+.ENV.*
+.python-version
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Gradle
+.gradle/
+
+# MyPy
+.mypy_cache/
+
+# PyTest
+.pytest_cache/
+
+# Distribution / packaging
+.Python
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+.venv.bak/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Translations
+*.mo
+*.pot
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx
+docs/_build/
+
+# PyBuilder
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Sage
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# FastAPI
+*.db
+*.db-journal
+
+# Jupyter
+.ipynb_checkpoints
+
+# Compressed archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# Temporary folders
+tmp/
+temp/
+
+# Cache
+.cache/
+__pycache__/
+*.cache
+
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+
+# Output files
+*.out
+*.bin
+*.class
+
+# Webpack
+webpack.config.js
+
+# Bower
+bower_components/
+
+# Grunt
+grunt/
+Gruntfile.js
+
+# Gulp
+gulp/
+Gulpfile.js
+
+# Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ESLint
+.eslintcache
+
+# Stylelint
+.stylelintcache
+
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.swm
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.atom/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+.project
+.classpath
+.settings/
+.loadpath
+.tm_properties
+
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+[ipP]ublish.xml
+*.pidb
+*.svclog
+*.sdf
+*.opensdf
+*.suo
+*.csproj.user
+*.vbproj.user
+*.fsproj.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+tx-logs/
+*.VC.VC.opendb
+*.VC.db
+
+# Visual Studio Code
+.vscode/
+.vscode-test/
+
+# JetBrains
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Code::Blocks
+*.depend
+*.layout
+*.cbp
+
+# Dev-C++
+*.dev
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+*.moc.cpp
+*.qm
+*.prl
+*.pri
+
+# CLion
+cmake-build-*/
+
+# Android Studio
+*.iml
+*.ipr
+*.iws
+*.sln.docstates
+*.userprefs
+.gradle/
+/build/
+captures/
+.externalNativeBuild
+.cxx/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.playground/
+xcuserdata/
+xcshareddata/
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM/
+
+# Linux
+*~
+.DS_Store
+.directory
+*.backup
+*.bak
+*.swp
+*.swo
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Icon?
+.deps
+*.userprefs
+*.userosscache
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.com.apple.FinderInfo
+.netrc
+*.swp
+*~
+.DS_Store.hfs
+.DS_Store
+.Spotlight-V100
+.Trashes
+.Icon?
+apfsctl.list
+apfs_snapshot_data
+apfs_snapshot_metadata
+apfs_snapshot_uuid
+apfs_snapshot_name
+apfs_snapshot_time
+apfs_snapshot_flags
+apfs_snapshot_parent
+apfs_snapshot_children
+apfs_snapshot_extent_refs
+apfs_snapshot_inodes
+apfs_snapshot_xattrs
+apfs_snapshot_symlinks
+apfs_snapshot_hardlinks
+apfs_snapshot_snapmeta
+apfs_snapshot_spaceman
+apfs_snapshot_test
+apfs_snapshot_crypto
+apfs_snapshot_fusion
+apfs_snapshot_devices
+apfs_snapshot_trim
+apfs_snapshot_revert
+apfs_snapshot_clone
+apfs_snapshot_clone_file
+apfs_snapshot_clone_dir
+apfs_snapshot_clone_tree
+apfs_snapshot_clone_sparse
+apfs_snapshot_clone_compressed
+apfs_snapshot_clone_encrypted
+apfs_snapshot_clone_fusion
+apfs_snapshot_clone_device
+apfs_snapshot_clone_trim
+apfs_snapshot_clone_revert
+```
